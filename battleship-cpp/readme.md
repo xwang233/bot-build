@@ -69,6 +69,7 @@ order of the size of each ship, print the start and end position of the ship.
 For submarines, just print the start position. Sample output for ship positions
 is shown below.
 
+```
 0 0
 4 2
 6 4:7 4
@@ -76,6 +77,7 @@ is shown below.
 7 7:7 9
 1 4:4 4
 4 0:8 0
+```
 For the next set of moves,
 
 Output the cell to be hit in your current move. The output consists of two
