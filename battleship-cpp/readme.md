@@ -3,7 +3,27 @@ Link: https://www.hackerrank.com/challenges/battleship
 ## My ranking 
 29/783
 
-## Description
+
+## My strategy 
+
+### Ship placing 
+Place the one of the size 1 ship in odd grid, and the other in even grid. 
+
+All other sized ships are fully random. 
+
+### Ship hitting 
+
+When there is not hit ('h') existed, use a probability based strategy. Description 
+can be found at http://www.datagenetics.com/blog/december32011/index.html.  
+
+When there exist hit ('h'), first tell if the adjacent hits are horizontally or vertically aligned. 
+Then hit along that direction. 
+
+When there is no such direction, or only a single hit ('h') exist, 
+hit a random adjacent point. 
+
+
+## Problem description
 Battleship is a popular 2-player game that takes place a 10 x 10 board. Ships
 of various sizes are placed on the 10 x 10 board either horizontally or
 vertically. The position of the ships are hidden to the user. Your task is to
