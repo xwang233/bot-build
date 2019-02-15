@@ -9,7 +9,7 @@ set<vector<POINT>> checkers::get_avail_move(char player) {
     set<vector<POINT>> nocap;
 
     char rival = 'w' + 'b' - player;
-    auto board_copy = board;
+    // auto board_copy = board;
     for (int i = 0; i < board_size; i++) {
         for (int j = 0; j < board_size; j++) {
             int c = board[i][j];
@@ -20,9 +20,9 @@ set<vector<POINT>> checkers::get_avail_move(char player) {
             get_next_nocap(cur, nocap, player);
             vector<POINT> cur_vec = {cur};
             get_next_cap(cur, cap, cur_vec, player);
-            board = board_copy;
         }
     }
+    // board = move(board_copy);
 
     if (cap.empty())
         return nocap;
@@ -89,21 +89,38 @@ void checkers::get_next_nocap(const POINT& pt, set<vector<POINT>>& nocap,
         return;
 }
 
-void checkers::move_from_vp(const vector<POINT>& vp, char player) {
+unordered_map<POINT, char, pair_hash> checkers::move_from_vp(
+    const vector<POINT>& vp, char player) {
+    unordered_map<POINT, char, pair_hash> ret;
     for (int i = 1; i < vp.size(); i++) {
         POINT last = vp[i - 1];
         POINT cur = vp[i];
 
+        ret[cur] = getvalue(cur);
         setvalue(cur) = getvalue(last);
+
+        ret[last] = getvalue(last);
         setvalue(last) = BLANK;
+
         if (abs(cur.first - last.first) != 1) {
             // cap move
-            setvalue((cur + last) / 2) = BLANK;
+            POINT half = (cur + last) / 2;
+            ret[half] = getvalue(half);
+            setvalue(half) = BLANK;
         }
 
         if ((cur.first == 0 && player == 'w') ||
             (cur.first == board_size - 1 && player == 'b')) {
             setvalue(cur) = toupper(getvalue(cur));
         }
+    }
+
+    return ret;
+}
+
+void checkers::recover_from_umap(
+    const unordered_map<POINT, char, pair_hash>& umap) {
+    for (const auto& pr : umap) {
+        setvalue(pr.first) = pr.second;
     }
 }

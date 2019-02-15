@@ -2,4 +2,4 @@ all: a.out
 	./a.out 
 
 a.out: *.cpp *.hpp
-	g++ -std=c++17 *.cpp 
+	g++-7 -std=c++17 *.cpp -fopenmp

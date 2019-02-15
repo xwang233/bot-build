@@ -70,12 +70,14 @@ class checkers {
 
     std::pair<std::vector<POINT>, int> minimax(int, char, bool, int, int);
     int eval(char);
+    int eval(); 
 
     std::set<std::vector<POINT>> get_avail_move(char);
     void get_next_cap(const POINT&, std::set<std::vector<POINT>>&,
                       std::vector<POINT>&, char);
     void get_next_nocap(const POINT&, std::set<std::vector<POINT>>&, char);
-    void move_from_vp(const std::vector<POINT>&, char);
+
+    void recover_from_umap(const std::unordered_map<POINT, char, pair_hash>&);
 
    public:
     checkers() {
@@ -85,6 +87,23 @@ class checkers {
     int process(const std::string&);
     void print_board();
     void print_pos();
+    const BOARD& getboard() { return board; }
+    void setboard(const BOARD& _board) {
+        board = _board;
+        board_size = board.size();
+    }
+    void setplayer(char c) {
+        WHOSTURN = c;
+        RIVAL = 'w' + 'b' - c;
+    }
+    char getplayer() { return WHOSTURN; }
+
+   public:
+    std::vector<POINT> next_move_handling();
+    std::vector<POINT> random_move();
+    // void move_from_vp(const std::vector<POINT>&, char);
+    std::unordered_map<POINT, char, pair_hash> move_from_vp(
+        const std::vector<POINT>&, char);
 };
 
 #endif

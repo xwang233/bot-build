@@ -11,7 +11,7 @@ using namespace std;
 pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                                            bool maximizing, int alpha,
                                            int beta) {
-    if (depth == 10) return {{}, eval(WHOSTURN) - eval(RIVAL)};
+    if (depth == 5) return {{}, eval()};
 
     const auto avail_move = get_avail_move(player);
     if (avail_move.empty()) {
@@ -20,7 +20,7 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         print_board();
         cout << endl;
 #endif
-        return {{}, eval(WHOSTURN) - eval(RIVAL)};
+        return {{}, eval()};
     }
 #ifdef DEBUG1
     print_board();
@@ -36,9 +36,9 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
     vector<POINT> bestplay;
     if (maximizing) {
         int best = -10000;
-        auto board_copy = board;
+        // auto board_copy = board;
         for (auto& vp : avail_move) {
-            move_from_vp(vp, player);
+            auto moved = move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, false, alpha, beta);
             auto ret = rets.second;
 #ifdef DEBUG2
@@ -51,7 +51,8 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                 cout << endl;
             }
 #endif
-            board = board_copy;
+            // board = board_copy;
+            recover_from_umap(moved);
 
             if (ret > best) {
 #ifdef DEBUG3
@@ -75,9 +76,9 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         return {bestplay, best};
     } else {
         int worst = 10000;
-        auto board_copy = board;
+        // auto board_copy = board;
         for (auto& vp : avail_move) {
-            move_from_vp(vp, player);
+            auto moved = move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, true, alpha, beta);
             auto ret = rets.second;
 #ifdef DEBUG2
@@ -90,7 +91,8 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                 cout << endl;
             }
 #endif
-            board = board_copy;
+            // board = board_copy;
+            recover_from_umap(moved);
 
             if (ret < worst) {
 #ifdef DEBUG3
@@ -126,9 +128,39 @@ int checkers::eval(char player) {
 
             if (c == toupper(player)) eval_king += (board_size + 2);
             if (player == 'b' && c == 'b') eval_pawn += (i + 1);
-            if (player == 'w' && c == 'w') eval_pawn += (board_size - i + 2);
+            if (player == 'w' && c == 'w') eval_pawn += (board_size - i + 1);
         }
     }
 
     return eval_pawn + eval_king;
+}
+
+int checkers::eval() {
+    char player = WHOSTURN;
+    char rival = RIVAL;
+
+    int eval_pawn = 0;
+    int eval_king = 0;
+    for (int i = 0; i < board_size; i++) {
+        for (int j = 0; j < board_size; j++) {
+            int c = board[i][j];
+            if (c == BLANK) continue;
+
+            if (c == toupper(player)) eval_king += (board_size + 2);
+            if (player == 'b' && c == 'b') eval_pawn += (i + 1);
+            if (player == 'w' && c == 'w') eval_pawn += (board_size - i + 1);
+
+            if (c == toupper(rival)) eval_king -= (board_size + 2);
+            if (rival == 'b' && c == 'b') eval_pawn -= (i + 1);
+            if (rival == 'w' && c == 'w') eval_pawn -= (board_size - i + 1);
+        }
+    }
+
+    auto avail_move_player = get_avail_move(player);
+    auto avail_move_rival = get_avail_move(rival);
+
+    int eval_avail_move =
+        avail_move_player.size() * 1 - avail_move_rival.size() * 1;
+
+    return eval_pawn + eval_king + eval_avail_move;
 }
