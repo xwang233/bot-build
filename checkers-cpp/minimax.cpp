@@ -2,13 +2,15 @@
 
 using namespace std;
 
+template <int (checkers::*_evalf)()>
 pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                                            bool maximizing, int alpha,
                                            int beta) {
     const auto avail_moves = get_avail_move(player);
     const auto& avail_move = avail_moves.first;
 
-    if (depth >= 6 && avail_moves.second == MOVE) return {{}, eval2()};
+    if (depth >= 6 && avail_moves.second == MOVE)
+        return {{}, (this->*_evalf)()};
 
     if (avail_move.empty()) {
         return {{}, player == WHOSTURN ? -1000 : +1000};
@@ -22,7 +24,7 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         for (const auto& vp : avail_move) {
             // auto moved = move_from_vp(vp, player);
             move_from_vp(vp, player);
-            auto rets = minimax(depth + 1, rival, false, alpha, beta);
+            auto rets = minimax<_evalf>(depth + 1, rival, false, alpha, beta);
             auto ret = rets.second;
             board = board_copy;
             // recover_from_umap(moved);
@@ -41,7 +43,7 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         for (const auto& vp : avail_move) {
             // auto moved = move_from_vp(vp, player);
             move_from_vp(vp, player);
-            auto rets = minimax(depth + 1, rival, true, alpha, beta);
+            auto rets = minimax<_evalf>(depth + 1, rival, true, alpha, beta);
             auto ret = rets.second;
             board = board_copy;
             // recover_from_umap(moved);
@@ -57,6 +59,9 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
     }
     return {};
 }
+
+template pair<vector<POINT>, int> checkers::minimax<&checkers::eval2>(
+    int depth, char player, bool maximizing, int alpha, int beta);
 
 int checkers::eval(char player) {
     int eval_pawn = 0;

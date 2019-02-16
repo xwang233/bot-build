@@ -31,7 +31,7 @@ int checkers::process(const string& str) {
 }
 
 int checkers::next_move() {
-    auto rets = minimax(0, WHOSTURN, true, -1000, 1000);
+    auto rets = minimax<&checkers::eval2>(0, WHOSTURN, true, -1000, 1000);
     auto ret = rets.first;
     printf("%lu\n", ret.size() - 1);
     for (const auto& pt : ret) {
@@ -42,7 +42,7 @@ int checkers::next_move() {
 }
 
 vector<POINT> checkers::next_move_handling() {
-    auto rets = minimax(0, WHOSTURN, true, -1000, 1000);
+    auto rets = minimax<&checkers::eval2>(0, WHOSTURN, true, -1000, 1000);
     // cerr << rets.second << endl;
     return rets.first;
 }

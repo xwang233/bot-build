@@ -71,7 +71,8 @@ class checkers {
                                                 char);
     int next_move();
 
-    std::pair<std::vector<POINT>, int> minimax(int, char, bool, int, int);
+    template <int (checkers::*)()>
+    std::pair<std::vector<POINT>, int> minimax(int, char, bool, int, int); 
     int eval(char);
     int eval();
     int eval2();
