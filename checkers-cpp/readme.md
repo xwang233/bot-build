@@ -1,7 +1,37 @@
 Link: https://www.hackerrank.com/challenges/checkers
 
-## My ranking 
-to be updated ...
+## My ranking and strategy
+36/225 using `eval2()` with depth = 6 Minimax algorithm and Alpha-Beta pruning. 
+
+Evaluation function `checkers::eval2()` refers strategy from https://github.com/kevingregor/Checkers. 
+(With my own code)
+
+Each pawn scores 5 points, each king scores 7.75 points, each piece in backrow scores 4 extra points, 
+each piece in the mid-4 slots scores 2.5 extra points, each piece in the mid-side-4 slots 
+scores 0.5 extra points, each vulnerable piece scores -3 points. 
+Each protected piece scores 3 points, which has not been implemented yet. 
+The final evaluation is your score minus your opponent's score. 
+
+My next step is to introduce more parameters and static/dynamic evaluators, 
+and use Machine Learning to optimize them, 
+by playing against another of my weaker bot. 
+
+## Short usage of the code 
+
+If you want to use this code to read from **stdin** or compete on Hackerrank, 
+use the main() function in `main.cpp_`. 
+
+If you want to play against another bot, use the first `main()` function 
+in `random_move.cpp`. 
+The 
+```c
+#pragma omp parallel for
+```
+line is the OpenMP parallel code, which can easily use all of your CPU cores to 
+let the bots play against each other:)
+
+The second `main2()` function in `random_move.cpp` is used for debugging. 
+
 
 ## Description
 Checkers or Draughts is a popular 2 player board game where the opponent discs are captured by jumping over them. The objective of the game is to capture as many discs of the opponent as possible or if the opponent has no valid moves left to make.
