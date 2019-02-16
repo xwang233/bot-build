@@ -4,7 +4,7 @@
 
 using namespace std;
 
-vector<vector<POINT>> checkers::get_avail_move(char player) {
+pair<vector<vector<POINT>>, int> checkers::get_avail_move(char player) {
     vector<vector<POINT>> cap;
     vector<vector<POINT>> nocap;
 
@@ -25,9 +25,9 @@ vector<vector<POINT>> checkers::get_avail_move(char player) {
     // board = move(board_copy);
 
     if (cap.empty())
-        return nocap;
+        return {nocap, MOVE};
     else
-        return cap;
+        return {cap, CAP};
 }
 
 void checkers::get_next_cap(const POINT& pt, vector<vector<POINT>>& cap,
@@ -91,21 +91,21 @@ void checkers::get_next_nocap(const POINT& pt, vector<vector<POINT>>& nocap,
 
 unordered_map<POINT, char, pair_hash> checkers::move_from_vp(
     const vector<POINT>& vp, char player) {
-    unordered_map<POINT, char, pair_hash> ret;
+    //unordered_map<POINT, char, pair_hash> ret;
     for (int i = 1; i < vp.size(); i++) {
         POINT last = vp[i - 1];
         POINT cur = vp[i];
 
-        ret[cur] = getvalue(cur);
+        //ret[cur] = getvalue(cur);
         setvalue(cur) = getvalue(last);
 
-        ret[last] = getvalue(last);
+        //ret[last] = getvalue(last);
         setvalue(last) = BLANK;
 
         if (abs(cur.first - last.first) != 1) {
             // cap move
             POINT half = (cur + last) / 2;
-            ret[half] = getvalue(half);
+            //ret[half] = getvalue(half);
             setvalue(half) = BLANK;
         }
 
@@ -115,5 +115,6 @@ unordered_map<POINT, char, pair_hash> checkers::move_from_vp(
         }
     }
 
-    return ret;
+    //return ret;
+    return {}; 
 }

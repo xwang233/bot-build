@@ -74,7 +74,9 @@ class checkers {
     int eval(char);
     int eval();
 
-    std::vector<std::vector<POINT>> get_avail_move(char);
+    const int CAP = 0;
+    const int MOVE = 1;
+    std::pair<std::vector<std::vector<POINT>>, int> get_avail_move(char);
     void get_next_cap(const POINT&, std::vector<std::vector<POINT>>&,
                       std::vector<POINT>&, char);
     void get_next_nocap(const POINT&, std::vector<std::vector<POINT>>&, char);

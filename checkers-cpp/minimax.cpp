@@ -11,14 +11,17 @@ using namespace std;
 pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                                            bool maximizing, int alpha,
                                            int beta) {
-    if (depth == 5) return {{}, eval()};
+    const auto avail_moves = get_avail_move(player);
+    const auto& avail_move = avail_moves.first;
 
-    const auto avail_move = get_avail_move(player);
+    if (depth >= 12 && avail_moves.second == MOVE) return {{}, eval()};
+
     if (avail_move.empty()) {
 #ifdef DEBUG4
-        printf("no avail move at depth = %d, player = %c\n", depth, player);
+        fprintf(stderr, "no avail move at depth = %d, player = %c\n", depth,
+                player);
         print_board();
-        cout << endl;
+        cerr << endl;
 #endif
         return {{}, player == WHOSTURN ? -1000 : 1000};
     }
@@ -36,9 +39,10 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
     vector<POINT> bestplay;
     if (maximizing) {
         int best = -10000;
-        auto board_copy = board;
+        const auto board_copy = board;
         for (const auto& vp : avail_move) {
-            auto moved = move_from_vp(vp, player);
+            // auto moved = move_from_vp(vp, player);
+            move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, false, alpha, beta);
             auto ret = rets.second;
 #ifdef DEBUG2
@@ -71,9 +75,10 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         return {bestplay, best};
     } else {
         int worst = 10000;
-        auto board_copy = board;
+        const auto board_copy = board;
         for (const auto& vp : avail_move) {
-            auto moved = move_from_vp(vp, player);
+            // auto moved = move_from_vp(vp, player);
+            move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, true, alpha, beta);
             auto ret = rets.second;
 #ifdef DEBUG2
@@ -98,7 +103,7 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         }
 #ifdef DEBUG
         printf("depth = %d, player = %c, eval func = %d\n", depth, player,
-               best);
+               worst);
         for (const auto& pt : bestplay) printf("%d %d, ", pt.first, pt.second);
         cout << endl;
         print_board();
@@ -146,11 +151,27 @@ int checkers::eval() {
         }
     }
 
-    auto avail_move_player = get_avail_move(player);
-    auto avail_move_rival = get_avail_move(rival);
+    const auto amps = get_avail_move(player);
+    const auto amrs = get_avail_move(rival);
+    const auto& amp = amps.first;
+    const auto& amr = amrs.first;
+
+    if (amp.empty()) return -1000;
+    if (amr.empty()) return 1000;
 
     int eval_avail_move = 0;
-    // avail_move_player.size() * 1 - avail_move_rival.size() * 1;
+
+    auto vpp = amp[0];
+    if (amps.second == CAP)
+        eval_avail_move += amp.size() * 3;
+    else
+        eval_avail_move += amp.size() * 1;
+
+    auto vpr = amr[0];
+    if (amrs.second == CAP)
+        eval_avail_move -= amr.size() * 3;
+    else
+        eval_avail_move -= amr.size() * 1;
 
     return eval_pawn + eval_king + eval_avail_move;
 }

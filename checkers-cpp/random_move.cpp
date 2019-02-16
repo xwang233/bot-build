@@ -57,9 +57,9 @@ int main(int argc, char* argv[]) {
 
 int main2() {
     checkers chk;
-    const vector<string> board = {"_b_b_b_b", "b_b_b_b_", "_b_b_b_b",
-                                  "________", "________", "w_w_w_w_",
-                                  "_w_w_w_w", "w_w_w_w_"};
+    const vector<string> board = {"_b_b_b_b", "____b_b_", "_____b_w",
+                                  "________", "_b______", "w_b_____",
+                                  "_____w_w", "w_w_w_w_"};
     chk.setboard(board);
     chk.setplayer('b');
 
@@ -71,7 +71,8 @@ int main2() {
 }
 
 vector<POINT> checkers::random_move() {
-    const auto avail_move = get_avail_move(WHOSTURN);
+    const auto avail_moves = get_avail_move(WHOSTURN);
+    const auto& avail_move = avail_moves.first;
 
     if (avail_move.empty()) return {};
 
