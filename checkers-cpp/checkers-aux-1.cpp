@@ -37,7 +37,7 @@ void checkers::get_next_cap(const POINT& pt, vector<vector<POINT>>& cap,
     if (getvalue(pt) == player) {
         cap_vec =
             exist_capturing_handling(pt, forward_dir_vec[player], 2, rival);
-    } else if (getvalue(pt) == towupper(WHOSTURN)) {
+    } else if (getvalue(pt) == toupper(player)) {
         cap_vec = exist_capturing_handling(pt, all_dir_vec, 4, rival);
     } else {
         return;
