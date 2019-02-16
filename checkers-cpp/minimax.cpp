@@ -151,6 +151,7 @@ int checkers::eval2() {
                 scores[c] += piece;
 
                 // protected piece value
+                /*
                 POINT cur = {i, j};
                 for (int i = 0; i < 2; i++) {
                     POINT next = cur + forward_dir_vec[c][i];
@@ -158,12 +159,14 @@ int checkers::eval2() {
                     if (getvalue(next) == c || getvalue(next) == toupper(c))
                         scores[c] += protected_value;
                 }
+                */
             }
 
             if (c == uplayer || c == urival) {
                 char lc = tolower(c);
                 scores[lc] += king;
 
+                /*
                 POINT cur = {i, j};
                 for (int i = 0; i < 4; i++) {
                     POINT next = cur + all_dir_vec[i];
@@ -171,6 +174,7 @@ int checkers::eval2() {
                     if (getvalue(next) == c || getvalue(next) == lc)
                         scores[lc] += protected_value;
                 }
+                */
             }
 
             // back row value
