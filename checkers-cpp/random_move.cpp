@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
                                   "________", "________", "w_w_w_w_",
                                   "_w_w_w_w", "w_w_w_w_"};
 
-    int total_match = 100;
+    int total_match = 256;
     int minimax_win = 0;
     int tied = 0;
 #pragma omp parallel for reduction(+ : minimax_win, tied)
@@ -51,17 +51,44 @@ int main(int argc, char* argv[]) {
             }
         }
     }
-    printf("minimax win %d, tie %d, lose %d\n", minimax_win, tied,
-           total_match - minimax_win - tied);
+    printf("minimax win rate %f, tie rate %f\n",
+           (double)minimax_win / total_match, (double)tied / total_match);
 }
 
 int main2() {
+    /*
+    const string board = {
+        "_b_b___b______b_____________b_b______w__w___w____w_____ww_______"};
+    const string board =
+        "_b_b___b______b_______________b_________w___w_b__w_____ww_______";
+        */
+    const string board =
+        "_b_b_b_b______b______w______b___________w___w____w___w_ww_______";
     checkers chk;
-    const vector<string> board = {"_b_b_b_b", "____b_b_", "_____b_w",
-                                  "________", "_b______", "w_b_____",
-                                  "_____w_w", "w_w_w_w_"};
     chk.setboard(board);
     chk.setplayer('b');
+    chk.print_board();
+
+    /*
+    const auto rets = chk.get_avail_move('w');
+    cout << (rets.second == chk.CAP ? "CAP" : "MOVE") << endl;
+    const auto& ret = rets.first;
+    for (const auto& vp : ret) {
+        for (const auto& pt : vp) printf("%d %d, ", pt.first, pt.second);
+        cout << endl;
+    }
+    chk.print_board();
+    */
+
+    /*
+    vector<vector<POINT>> cap;
+    vector<POINT> cur_vec = {{6, 7}};
+    chk.get_next_cap({6, 7}, cap, cur_vec, 'w');
+    for (const auto& vp : cap) {
+        for (const auto& pt : vp) printf("%d %d, ", pt.first, pt.second);
+        cout << endl;
+    }
+    */
 
     auto vp = chk.next_move_handling();
     for (const auto& pt : vp) printf("%d %d, ", pt.first, pt.second);

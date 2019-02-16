@@ -43,6 +43,7 @@ inline POINT operator/(POINT l, int r) {
 }
 
 class checkers {
+   public:
     using BOARD = std::vector<std::string>;
 
     char WHOSTURN;
@@ -73,6 +74,7 @@ class checkers {
     std::pair<std::vector<POINT>, int> minimax(int, char, bool, int, int);
     int eval(char);
     int eval();
+    int eval2();
 
     const int CAP = 0;
     const int MOVE = 1;
@@ -93,6 +95,21 @@ class checkers {
     void setboard(const BOARD& _board) {
         board = _board;
         board_size = board.size();
+    }
+    void setboard(const std::string& str) {
+        board_size = (int)sqrt(str.size());
+        if (board_size * board_size != str.size()) {
+            std::cerr << "STR size wrong! default initialized!" << std::endl;
+            BOARD _board = {"_b_b_b_b", "b_b_b_b_", "_b_b_b_b", "________",
+                            "________", "w_w_w_w_", "_w_w_w_w", "w_w_w_w_"};
+            setboard(_board);
+            return;
+        }
+        board.clear();
+        for (int i = 0; i < str.size(); i++) {
+            if (i % board_size == 0) board.push_back("");
+            board.back().push_back(str[i]);
+        }
     }
     void setplayer(char c) {
         WHOSTURN = c;
