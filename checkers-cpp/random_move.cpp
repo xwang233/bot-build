@@ -1,7 +1,7 @@
+#include <cstdlib>
+#include <ctime>
 #include <random>
 #include "checkers.hpp"
-#include <cstdlib> 
-#include <ctime> 
 
 using namespace std;
 
@@ -10,7 +10,8 @@ int main(int argc, char* argv[]) {
                                   "________", "________", "w_w_w_w_",
                                   "_w_w_w_w", "w_w_w_w_"};
 
-    srand(time(NULL)); 
+    srand(time(NULL));
+    // Zobrist_HASH::init_table(64, 4);
 
     int total_match = 256;
     int minimax_win = 0;
@@ -107,7 +108,7 @@ vector<POINT> checkers::random_move() {
 
     if (avail_move.empty()) return {};
 
-    int rn = rand() % avail_move.size(); 
+    int rn = rand() % avail_move.size();
     auto it = avail_move.begin();
     advance(it, rn);
 

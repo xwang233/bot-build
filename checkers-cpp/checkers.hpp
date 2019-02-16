@@ -11,6 +11,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "zobrist_hashing.hpp"
+
 using POINT = std::pair<int, int>;
 struct pair_hash {
     std::size_t operator()(const std::pair<int, int>& pr) const {
@@ -53,6 +55,10 @@ class checkers {
     int board_size;
     std::unordered_set<POINT, pair_hash> my_pos;
     std::unordered_set<POINT, pair_hash> rival_pos;
+
+    std::unordered_map<BOARD, std::pair<std::vector<std::vector<POINT>>, int>,
+                       Zobrist_HASH>
+        avail_move_cache;
 
     const POINT dir_vec[4] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
     // POINT forward_dir_vec[2];
