@@ -116,8 +116,6 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
     return {};
 }
 
-// eval(WHOSTURN)-eval(RIVAL), depth 6, 0.78 WR, 0.11 TR
-// eval(WHOSTURN), depth 6, 0.64 WR, 0.22 TR
 int checkers::eval(char player) {
     int eval_pawn = 0;
     int eval_king = 0;
@@ -135,7 +133,6 @@ int checkers::eval(char player) {
     return eval_pawn + eval_king;
 }
 
-// eval(), depth 3, 0.79 WR, 0.02 TR
 int checkers::eval() {
     char player = WHOSTURN;
     char rival = RIVAL;
