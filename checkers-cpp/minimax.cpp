@@ -2,12 +2,6 @@
 
 using namespace std;
 
-// #define DEBUG
-// #define DEBUG1
-// #define DEBUG2
-// #define DEBUG3
-// #define DEBUG4
-
 pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                                            bool maximizing, int alpha,
                                            int beta) {
@@ -17,26 +11,8 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
     if (depth >= 6 && avail_moves.second == MOVE) return {{}, eval2()};
 
     if (avail_move.empty()) {
-#ifdef DEBUG4
-        fprintf(stderr, "no avail move at depth = %d, player = %c\n", depth,
-                player);
-        print_board();
-        cerr << endl;
-#endif
         return {{}, player == WHOSTURN ? -1000 : +1000};
     }
-#ifdef DEBUG1
-    print_board();
-    printf("depth = %d, player = %c", depth, player);
-    cerr << endl;
-    cerr << (avail_moves.second == CAP ? "CAP" : "MOVE") << endl;
-    for (const auto& vp : avail_move) {
-        for (const auto& pt : vp)
-            fprintf(stderr, "%d %d, ", pt.first, pt.second);
-        cerr << endl;
-    }
-    cerr << endl;
-#endif
 
     char rival = 'w' + 'b' - player;
     vector<POINT> bestplay;
@@ -48,16 +24,6 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
             move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, false, alpha, beta);
             auto ret = rets.second;
-#ifdef DEBUG2
-            if (depth <= 3) {
-                // print_board();
-                printf("depth = %d, player = %c, ret = %d\ntheplay: ", depth,
-                       player, ret);
-                for (const auto& p : vp) printf("%d %d, ", p.first, p.second);
-                cout << endl;
-                cout << endl;
-            }
-#endif
             board = board_copy;
             // recover_from_umap(moved);
 
@@ -68,13 +34,6 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
             alpha = max(alpha, best);
             if (alpha >= beta) break;
         }
-#ifdef DEBUG
-        printf("\ndepth = %d, player = %c, best eval func = %d\n", depth,
-               player, best);
-        for (const auto& pt : bestplay) printf("%d %d, ", pt.first, pt.second);
-        cout << endl;
-        print_board();
-#endif
         return {bestplay, best};
     } else {
         int worst = 10000;
@@ -84,16 +43,6 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
             move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, true, alpha, beta);
             auto ret = rets.second;
-#ifdef DEBUG2
-            if (depth <= 2) {
-                print_board();
-                printf("depth = %d, player = %c, ret = %d\ntheplay: ", depth,
-                       player, ret);
-                for (const auto& p : vp) printf("%d %d, ", p.first, p.second);
-                cout << endl;
-                cout << endl;
-            }
-#endif
             board = board_copy;
             // recover_from_umap(moved);
 
@@ -104,13 +53,6 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
             beta = min(beta, worst);
             if (alpha >= beta) break;
         }
-#ifdef DEBUG
-        printf("\ndepth = %d, player = %c, worst eval func = %d\n", depth,
-               player, worst);
-        for (const auto& pt : bestplay) printf("%d %d, ", pt.first, pt.second);
-        cout << endl;
-        print_board();
-#endif
         return {bestplay, worst};
     }
     return {};
@@ -209,7 +151,6 @@ int checkers::eval2() {
                 scores[c] += piece;
 
                 // protected piece value
-                /*
                 POINT cur = {i, j};
                 for (int i = 0; i < 2; i++) {
                     POINT next = cur + forward_dir_vec[c][i];
@@ -217,14 +158,12 @@ int checkers::eval2() {
                     if (getvalue(next) == c || getvalue(next) == toupper(c))
                         scores[c] += protected_value;
                 }
-                */
             }
 
             if (c == uplayer || c == urival) {
                 char lc = tolower(c);
                 scores[lc] += king;
 
-                /*
                 POINT cur = {i, j};
                 for (int i = 0; i < 4; i++) {
                     POINT next = cur + all_dir_vec[i];
@@ -232,7 +171,6 @@ int checkers::eval2() {
                     if (getvalue(next) == c || getvalue(next) == lc)
                         scores[lc] += protected_value;
                 }
-                */
             }
 
             // back row value
