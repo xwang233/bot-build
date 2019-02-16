@@ -1,5 +1,7 @@
 #include <random>
 #include "checkers.hpp"
+#include <cstdlib> 
+#include <ctime> 
 
 using namespace std;
 
@@ -7,6 +9,8 @@ int main(int argc, char* argv[]) {
     const vector<string> board = {"_b_b_b_b", "b_b_b_b_", "_b_b_b_b",
                                   "________", "________", "w_w_w_w_",
                                   "_w_w_w_w", "w_w_w_w_"};
+
+    srand(time(NULL)); 
 
     int total_match = 256;
     int minimax_win = 0;
@@ -103,11 +107,7 @@ vector<POINT> checkers::random_move() {
 
     if (avail_move.empty()) return {};
 
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution uid(0, static_cast<int>(avail_move.size()) - 1);
-
-    int rn = uid(gen);
+    int rn = rand() % avail_move.size(); 
     auto it = avail_move.begin();
     advance(it, rn);
 
