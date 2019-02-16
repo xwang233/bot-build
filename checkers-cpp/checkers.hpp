@@ -1,6 +1,8 @@
 #ifndef XW_CHECKERS_H
 #define XW_CHECKERS_H
 
+#include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <map>
 #include <set>
@@ -70,14 +72,12 @@ class checkers {
 
     std::pair<std::vector<POINT>, int> minimax(int, char, bool, int, int);
     int eval(char);
-    int eval(); 
+    int eval();
 
-    std::set<std::vector<POINT>> get_avail_move(char);
-    void get_next_cap(const POINT&, std::set<std::vector<POINT>>&,
+    std::vector<std::vector<POINT>> get_avail_move(char);
+    void get_next_cap(const POINT&, std::vector<std::vector<POINT>>&,
                       std::vector<POINT>&, char);
-    void get_next_nocap(const POINT&, std::set<std::vector<POINT>>&, char);
-
-    void recover_from_umap(const std::unordered_map<POINT, char, pair_hash>&);
+    void get_next_nocap(const POINT&, std::vector<std::vector<POINT>>&, char);
 
    public:
     checkers() {

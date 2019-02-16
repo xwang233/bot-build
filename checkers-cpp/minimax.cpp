@@ -20,7 +20,7 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         print_board();
         cout << endl;
 #endif
-        return {{}, eval()};
+        return {{}, player == WHOSTURN ? -1000 : 1000};
     }
 #ifdef DEBUG1
     print_board();
@@ -36,8 +36,8 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
     vector<POINT> bestplay;
     if (maximizing) {
         int best = -10000;
-        // auto board_copy = board;
-        for (auto& vp : avail_move) {
+        auto board_copy = board;
+        for (const auto& vp : avail_move) {
             auto moved = move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, false, alpha, beta);
             auto ret = rets.second;
@@ -51,15 +51,10 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                 cout << endl;
             }
 #endif
-            // board = board_copy;
-            recover_from_umap(moved);
+            board = board_copy;
+            // recover_from_umap(moved);
 
             if (ret > best) {
-#ifdef DEBUG3
-                if (best != -10000)
-                    printf("depth = %d,best = %d, ret = %d\n", depth, best,
-                           ret);
-#endif
                 bestplay = vp;
                 best = ret;
             }
@@ -76,14 +71,14 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
         return {bestplay, best};
     } else {
         int worst = 10000;
-        // auto board_copy = board;
-        for (auto& vp : avail_move) {
+        auto board_copy = board;
+        for (const auto& vp : avail_move) {
             auto moved = move_from_vp(vp, player);
             auto rets = minimax(depth + 1, rival, true, alpha, beta);
             auto ret = rets.second;
 #ifdef DEBUG2
-            if (depth <= 3) {
-                // print_board();
+            if (depth <= 2) {
+                print_board();
                 printf("depth = %d, player = %c, ret = %d\ntheplay: ", depth,
                        player, ret);
                 for (const auto& p : vp) printf("%d %d, ", p.first, p.second);
@@ -91,15 +86,10 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                 cout << endl;
             }
 #endif
-            // board = board_copy;
-            recover_from_umap(moved);
+            board = board_copy;
+            // recover_from_umap(moved);
 
             if (ret < worst) {
-#ifdef DEBUG3
-                if (worst != 10000)
-                    printf("depth = %d, worst = %d, ret = %d\n", depth, worst,
-                           ret);
-#endif
                 bestplay = vp;
                 worst = ret;
             }
@@ -159,8 +149,8 @@ int checkers::eval() {
     auto avail_move_player = get_avail_move(player);
     auto avail_move_rival = get_avail_move(rival);
 
-    int eval_avail_move =
-        avail_move_player.size() * 1 - avail_move_rival.size() * 1;
+    int eval_avail_move = 0;
+    // avail_move_player.size() * 1 - avail_move_rival.size() * 1;
 
     return eval_pawn + eval_king + eval_avail_move;
 }

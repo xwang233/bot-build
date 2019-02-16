@@ -4,8 +4,6 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    ;
-
     const vector<string> board = {"_b_b_b_b", "b_b_b_b_", "_b_b_b_b",
                                   "________", "________", "w_w_w_w_",
                                   "_w_w_w_w", "w_w_w_w_"};
@@ -55,6 +53,21 @@ int main(int argc, char* argv[]) {
     }
     printf("minimax win %d, tie %d, lose %d\n", minimax_win, tied,
            total_match - minimax_win - tied);
+}
+
+int main2() {
+    checkers chk;
+    const vector<string> board = {"_b_b_b_b", "b_b_b_b_", "_b_b_b_b",
+                                  "________", "________", "w_w_w_w_",
+                                  "_w_w_w_w", "w_w_w_w_"};
+    chk.setboard(board);
+    chk.setplayer('b');
+
+    auto vp = chk.next_move_handling();
+    for (const auto& pt : vp) printf("%d %d, ", pt.first, pt.second);
+    cout << endl;
+
+    return 0;
 }
 
 vector<POINT> checkers::random_move() {

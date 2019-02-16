@@ -4,9 +4,9 @@
 
 using namespace std;
 
-set<vector<POINT>> checkers::get_avail_move(char player) {
-    set<vector<POINT>> cap;
-    set<vector<POINT>> nocap;
+vector<vector<POINT>> checkers::get_avail_move(char player) {
+    vector<vector<POINT>> cap;
+    vector<vector<POINT>> nocap;
 
     char rival = 'w' + 'b' - player;
     // auto board_copy = board;
@@ -30,7 +30,7 @@ set<vector<POINT>> checkers::get_avail_move(char player) {
         return cap;
 }
 
-void checkers::get_next_cap(const POINT& pt, set<vector<POINT>>& cap,
+void checkers::get_next_cap(const POINT& pt, vector<vector<POINT>>& cap,
                             vector<POINT>& cur_vec, char player) {
     char rival = 'w' + 'b' - player;
     vector<POINT> cap_vec;
@@ -44,7 +44,7 @@ void checkers::get_next_cap(const POINT& pt, set<vector<POINT>>& cap,
     }
 
     if (cap_vec.empty()) {
-        if (cur_vec.size() != 1) cap.insert(cur_vec);
+        if (cur_vec.size() != 1) cap.push_back(cur_vec);
         return;
     }
 
@@ -71,19 +71,19 @@ void checkers::get_next_cap(const POINT& pt, set<vector<POINT>>& cap,
     }
 }
 
-void checkers::get_next_nocap(const POINT& pt, set<vector<POINT>>& nocap,
+void checkers::get_next_nocap(const POINT& pt, vector<vector<POINT>>& nocap,
                               char player) {
     if (getvalue(pt) == player) {
         for (int i = 0; i < 2; i++) {
             POINT next = pt + forward_dir_vec[player][i];
             if (!is_inboundary(next)) continue;
-            if (getvalue(next) == BLANK) nocap.insert({pt, next});
+            if (getvalue(next) == BLANK) nocap.push_back({pt, next});
         }
     } else if (getvalue(pt) == toupper(player)) {
         for (int i = 0; i < 4; i++) {
             POINT next = pt + all_dir_vec[i];
             if (!is_inboundary(next)) continue;
-            if (getvalue(next) == BLANK) nocap.insert({pt, next});
+            if (getvalue(next) == BLANK) nocap.push_back({pt, next});
         }
     } else
         return;
@@ -116,11 +116,4 @@ unordered_map<POINT, char, pair_hash> checkers::move_from_vp(
     }
 
     return ret;
-}
-
-void checkers::recover_from_umap(
-    const unordered_map<POINT, char, pair_hash>& umap) {
-    for (const auto& pr : umap) {
-        setvalue(pr.first) = pr.second;
-    }
 }
