@@ -14,7 +14,7 @@ The final evaluation is your score minus your opponent's score.
 
 My next step is to introduce more parameters and static/dynamic evaluators, 
 and use Machine Learning to optimize them, 
-by playing against another of my weaker bot. 
+by playing against another bot. 
 
 ## Short usage of the code 
 
