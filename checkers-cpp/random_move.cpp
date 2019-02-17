@@ -109,9 +109,5 @@ vector<POINT> checkers::random_move() {
     if (avail_move.empty()) return {};
 
     int rn = rand() % avail_move.size();
-    auto it = avail_move.begin();
-    advance(it, rn);
-
-    auto vp = *it;
-    return vp;
+    return avail_move[rn];
 }
