@@ -5,7 +5,6 @@
 using namespace std;
 
 pair<vector<vector<POINT>>, int> checkers::get_avail_move(char player) {
-    // if (avail_move_cache.count(board)) return avail_move_cache.at(board);
     vector<vector<POINT>> cap;
     vector<vector<POINT>> nocap;
 
@@ -25,15 +24,13 @@ pair<vector<vector<POINT>>, int> checkers::get_avail_move(char player) {
     }
     // board = move(board_copy);
 
+    pair<vector<vector<POINT>>, int> ret;
     if (cap.empty()) {
-        pair<vector<vector<POINT>>, int> ret = make_pair(move(nocap), MOVE);
-        // avail_move_cache[board] = ret;
-        return ret;
+        ret = make_pair(move(nocap), MOVE);
     } else {
-        pair<vector<vector<POINT>>, int> ret = make_pair(move(cap), CAP);
-        // avail_move_cache[board] = ret;
-        return ret;
+        ret = make_pair(move(cap), CAP);
     }
+    return ret;
 }
 
 void checkers::get_next_cap(const POINT& pt, vector<vector<POINT>>& cap,

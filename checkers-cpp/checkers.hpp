@@ -56,10 +56,6 @@ class checkers {
     std::unordered_set<POINT, pair_hash> my_pos;
     std::unordered_set<POINT, pair_hash> rival_pos;
 
-    std::unordered_map<BOARD, std::pair<std::vector<std::vector<POINT>>, int>,
-                       Zobrist_HASH>
-        avail_move_cache;
-
     const POINT dir_vec[4] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
     // POINT forward_dir_vec[2];
     const std::vector<POINT> all_dir_vec = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
