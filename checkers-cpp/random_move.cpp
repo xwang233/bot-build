@@ -21,6 +21,11 @@ int main(int argc, char* argv[]) {
         checkers chk_minimax;
         checkers chk_random;
 
+        auto pttw = make_shared<TRANS_TABLE_HASH_MAP>();
+        auto pttb = make_shared<TRANS_TABLE_HASH_MAP>();
+
+        chk_minimax.setptt(pttb, pttw);
+
         chk_minimax.setplayer('b');
         chk_random.setplayer('w');
 
@@ -55,6 +60,9 @@ int main(int argc, char* argv[]) {
                 break;
             }
         }
+
+        // size_t trans_table_size = pttw->size() + pttb->size();
+        // printf("transposition table size = %lu\n", trans_table_size);
     }
     printf("minimax win rate %f, tie rate %f\n",
            (double)minimax_win / total_match, (double)tied / total_match);

@@ -46,3 +46,23 @@ vector<POINT> checkers::next_move_handling() {
     // cerr << rets.second << endl;
     return rets.first;
 }
+
+void checkers::setboard(const BOARD& _board) {
+    board = _board;
+    board_size = board.size();
+}
+void checkers::setboard(const std::string& str) {
+    board_size = (int)sqrt(str.size());
+    if (board_size * board_size != str.size()) {
+        std::cerr << "STR size wrong! default initialized!" << std::endl;
+        BOARD _board = {"_b_b_b_b", "b_b_b_b_", "_b_b_b_b", "________",
+                        "________", "w_w_w_w_", "_w_w_w_w", "w_w_w_w_"};
+        setboard(_board);
+        return;
+    }
+    board.clear();
+    for (int i = 0; i < str.size(); i++) {
+        if (i % board_size == 0) board.push_back("");
+        board.back().push_back(str[i]);
+    }
+}

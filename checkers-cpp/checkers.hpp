@@ -5,12 +5,14 @@
 #include <cmath>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
+#include "transposition.hpp"
 #include "zobrist_hashing.hpp"
 
 using POINT = std::pair<int, int>;
@@ -44,10 +46,14 @@ inline POINT operator/(POINT l, int r) {
     return l;
 }
 
+using BOARD = std::vector<std::string>;
+using TRANS_TABLE_HASH_MAP = std::unordered_map<BOARD, trans_table, VST_HASH>;
+// using TRANS_TABLE_HASH_MAP = std::map<BOARD, trans_table>;
+// pointer to transposition-table hash-map
+using PTTHM = std::shared_ptr<TRANS_TABLE_HASH_MAP>;
+
 class checkers {
    public:
-    using BOARD = std::vector<std::string>;
-
     char WHOSTURN;
     char RIVAL;
     const char BLANK = '_';
@@ -73,8 +79,10 @@ class checkers {
                                                 char);
     int next_move();
 
+    PTTHM pttw = nullptr, pttb = nullptr;
+
     template <int (checkers::*)()>
-    std::pair<std::vector<POINT>, int> minimax(int, char, bool, int, int); 
+    std::pair<std::vector<POINT>, int> minimax(int, char, bool, int, int);
     int eval(char);
     int eval();
     int eval2();
@@ -95,30 +103,17 @@ class checkers {
     void print_board();
     void print_pos();
     const BOARD& getboard() { return board; }
-    void setboard(const BOARD& _board) {
-        board = _board;
-        board_size = board.size();
-    }
-    void setboard(const std::string& str) {
-        board_size = (int)sqrt(str.size());
-        if (board_size * board_size != str.size()) {
-            std::cerr << "STR size wrong! default initialized!" << std::endl;
-            BOARD _board = {"_b_b_b_b", "b_b_b_b_", "_b_b_b_b", "________",
-                            "________", "w_w_w_w_", "_w_w_w_w", "w_w_w_w_"};
-            setboard(_board);
-            return;
-        }
-        board.clear();
-        for (int i = 0; i < str.size(); i++) {
-            if (i % board_size == 0) board.push_back("");
-            board.back().push_back(str[i]);
-        }
-    }
+    void setboard(const BOARD& _board);
+    void setboard(const std::string& str);
     void setplayer(char c) {
         WHOSTURN = c;
         RIVAL = 'w' + 'b' - c;
     }
     char getplayer() { return WHOSTURN; }
+    void setptt(PTTHM _b, PTTHM _w) {
+        pttb = _b;
+        pttw = _w;
+    }
 
    public:
     std::vector<POINT> next_move_handling();

@@ -2,14 +2,33 @@
 
 using namespace std;
 
+#define MAX_DEPTH 6
+#define TRANSPOSITION_TABLE_LOOK_UP
+
 template <int (checkers::*_evalf)()>
 pair<vector<POINT>, int> checkers::minimax(int depth, char player,
                                            bool maximizing, int alpha,
                                            int beta) {
-    const auto avail_moves = get_avail_move(player);
-    const auto& avail_move = avail_moves.first;
+#ifdef TRANSPOSITION_TABLE_LOOK_UP
+    // pointer to transposition table of the player
+    PTTHM pttp = (player == 'w') ? pttw : pttb;
+    pair<vector<POINT>, int> ret;
 
-    if (depth >= 6 && avail_moves.second == MOVE)
+    if (pttp->count(board) &&
+        pttp->at(board).searched_depth >= (MAX_DEPTH - depth)) {
+        const auto& ttb = pttp->at(board);
+        if (depth == 0)
+            ret = make_pair(ttb.best_move, ttb.value);
+        else
+            ret = make_pair(vector<POINT>(), ttb.value);
+        return ret;
+    }
+#endif
+
+    auto avail_moves = get_avail_move(player);
+    auto& avail_move = avail_moves.first;
+
+    if (depth >= MAX_DEPTH && avail_moves.second == MOVE)
         return {{}, (this->*_evalf)()};
 
     if (avail_move.empty()) {
@@ -17,11 +36,11 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
     }
 
     char rival = 'w' + 'b' - player;
-    vector<POINT> bestplay;
+    vector<POINT>* pbestplay;
     if (maximizing) {
         int best = -10000;
         const auto board_copy = board;
-        for (const auto& vp : avail_move) {
+        for (auto& vp : avail_move) {
             // auto moved = move_from_vp(vp, player);
             move_from_vp(vp, player);
             auto rets = minimax<_evalf>(depth + 1, rival, false, alpha, beta);
@@ -30,17 +49,31 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
             // recover_from_umap(moved);
 
             if (ret > best) {
-                bestplay = vp;
+                pbestplay = &vp;
                 best = ret;
             }
             alpha = max(alpha, best);
             if (alpha >= beta) break;
         }
-        return {bestplay, best};
+#ifdef TRANSPOSITION_TABLE_LOOK_UP
+        pttp->insert_or_assign(
+            board, trans_table(MAX_DEPTH > depth ? MAX_DEPTH - depth : 0,
+                               *pbestplay, best));
+#endif
+
+        if (depth == 0) {
+#ifdef TRANSPOSITION_TABLE_LOOK_UP
+            return make_pair(pttp->at(board).best_move, best);
+#else
+            return make_pair(move(*pbestplay), best);
+#endif
+        } else
+            return {{}, best};
+
     } else {
         int worst = 10000;
         const auto board_copy = board;
-        for (const auto& vp : avail_move) {
+        for (auto& vp : avail_move) {
             // auto moved = move_from_vp(vp, player);
             move_from_vp(vp, player);
             auto rets = minimax<_evalf>(depth + 1, rival, true, alpha, beta);
@@ -49,13 +82,18 @@ pair<vector<POINT>, int> checkers::minimax(int depth, char player,
             // recover_from_umap(moved);
 
             if (ret < worst) {
-                bestplay = vp;
+                pbestplay = &vp;
                 worst = ret;
             }
             beta = min(beta, worst);
             if (alpha >= beta) break;
         }
-        return {bestplay, worst};
+#ifdef TRANSPOSITION_TABLE_LOOK_UP
+        pttp->insert_or_assign(
+            board, trans_table(MAX_DEPTH > depth ? MAX_DEPTH - depth : 0,
+                               *pbestplay, worst));
+#endif
+        return {{}, worst};
     }
     return {};
 }
