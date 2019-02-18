@@ -6,13 +6,13 @@
 #include <utility>
 #include <vector>
 
+#include <boost/container_hash/hash.hpp>
+
 // when reserved memory for hash_map is not huge enough, this hash performs
 // much much better than Zobrish hashing
 struct VST_HASH {
     inline std::size_t operator()(const std::vector<std::string>& vst) const {
-        size_t h = 0;
-        for (const auto& str : vst) h ^= std::hash<std::string>()(str);
-        return h;
+        return boost::hash<std::vector<std::string>>()(vst);
     }
 };
 
