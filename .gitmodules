@@ -1,0 +1,3 @@
+[submodule "checkers-visualize"]
+	path = checkers-visualize
+	url = git@github.com:society765/checkers-visualize.git

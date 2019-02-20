@@ -16,6 +16,12 @@ My next step is to introduce more parameters and static/dynamic evaluators,
 and use Machine Learning to optimize them, 
 by playing against another bot. 
 
+Visualizations of checkers game in *javascript* is added. Front-end *js* is a 
+fork from [codethejason](https://github.com/codethejason/checkers) with bug-fix. 
+I wrote the back-end using *C++* and 
+[dlib](https://github.com/davisking/dlib) for networking, 
+and the back-end is dynamically linked to this repo. 
+
 ## Short usage of the code 
 
 If you want to use this code to read from **stdin** or compete on Hackerrank, 
