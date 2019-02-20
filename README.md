@@ -18,9 +18,14 @@ Please check [tic-tac-toe/readme.md](tic-tac-toe/readme.md) for details.
 
 I used minimax strategy with alpha-beta pruning. 
 My next step is to introduce more parameters and static/dynamic evaluators, 
-and use machine learning to optimize them by playing against another bot. 
+and optimize them by playing against another bot. 
 
-Please check [checkers-cpp/readme.md](checkers-cpp/readme.md) for details. 
+Visualization for checkers is added! Front-end with *javascript* is forked from 
+*codethejason* with bug-fix. I wronte the back-end using *C++* and *dlib* for 
+networking. The back-end is dynamically linked to the checkers repo. 
+
+Please check [checkers-cpp/readme.md](checkers-cpp/readme.md) and 
+[checkers-visualize/readme.md](checkers-visualize/readme.md) for details. 
 
 ## License 
 
