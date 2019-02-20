@@ -25,7 +25,7 @@ Visualization for checkers is added! Front-end with *javascript* is forked from
 networking. The back-end is dynamically linked to the checkers repo. 
 
 Please check [checkers-cpp/readme.md](checkers-cpp/readme.md) and 
-[checkers-visualize/readme.md](checkers-visualize/readme.md) for details. 
+[checkers-visualize/readme.md](https://github.com/society765/checkers-visualize) for details. 
 
 ## License 
 
