@@ -8,6 +8,17 @@ int battleship::process(string str) {
 
         for (const auto& i : ret) cout << i << endl;
         return 1;
+    } else if (str == "INIT_STR"){ 
+        vector<vector<int>> ret = ship_init_str(); 
+
+        for(const auto& vi : ret){ 
+            for (const auto& i : vi){ 
+                cout << i << " "; 
+            }
+            cout << endl; 
+        }
+
+        return 1; 
     }
 
     if (!initiated && str == to_string(board_size)) {

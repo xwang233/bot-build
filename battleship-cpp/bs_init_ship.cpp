@@ -31,17 +31,20 @@ string battleship::place_ship(vector<string>& board, int boat_size) {
                 for (int i = 0; i < boat_size; i++) {
                     point check = head + (dir_vec * i);
                     // board[check.first][check.second] = 'A';
-                    setpoint(board, check) = 'A';
+                    // setpoint(board, check) = 'A';
+                    setpoint(board, check) = 'A' + ship_id;
                 }
                 string ret;
                 ret += to_string(head.first) + ' ' + to_string(head.second);
                 ret += ':';
                 ret += to_string(tail.first) + ' ' + to_string(tail.second);
+
+                ship_id++; 
+
                 return ret;
             }
         }
     }
-
     return "";
 }
 
@@ -53,24 +56,22 @@ string battleship::place_ship_size_one(vector<string>& board, bool iseven) {
         if (iseven && (head.first + head.second) % 2 == 1) continue;
         if (!iseven && (head.first + head.second) % 2 == 0) continue;
 
-        setpoint(board, head) = 'A';
+        setpoint(board, head) = 'A' + ship_id;
+        ship_id++; 
         return to_string(head.first) + ' ' + to_string(head.second);
     }
 }
 
-vector<string> battleship::ship_init() {
-    /*
-    return {"0 0",     "4 2",     "6 4:7 4", "3 7:3 8",
-        "7 7:7 9", "1 4:4 4", "4 0:8 0"};
-    */
+void battleship::ship_init_helper(vector<string>& strret,
+                                  vector<string>& vviret) {
     vector<string> init_board =
         vector<string>(board_size, string(board_size, '-'));
 
     vector<string> ret;
-    //ret.push_back(place_ship(init_board, 1));
-    //ret.push_back(place_ship(init_board, 1));
-    ret.push_back(place_ship_size_one(init_board, true));
-    ret.push_back(place_ship_size_one(init_board, false));
+    // ret.push_back(place_ship(init_board, 1));
+    // ret.push_back(place_ship(init_board, 1));
+    // ret.push_back(place_ship_size_one(init_board, true));
+    // ret.push_back(place_ship_size_one(init_board, false));
     ret.push_back(place_ship(init_board, 2));
     ret.push_back(place_ship(init_board, 2));
     ret.push_back(place_ship(init_board, 3));
@@ -79,5 +80,35 @@ vector<string> battleship::ship_init() {
 
     // for (const auto& i : init_board) cout << i << endl;
 
-    return ret;
+    strret = ret;
+    vviret = move(init_board);
+}
+
+vector<string> battleship::ship_init() {
+    vector<string> res;
+    vector<string> vviret;
+    ship_init_helper(res, vviret);
+
+    return res;
+}
+
+vector<vector<int>> battleship::ship_init_str() {
+    vector<string> res;
+    vector<string> vviret;
+    ship_init_helper(res, vviret);
+
+    // for (auto& str : res) cout << str << endl; 
+
+    auto vires = vector<vector<int>>(board_size, vector<int>(board_size, 0));
+    for (int i = 0; i < board_size; i++) {
+        for (int j = 0; j < board_size; j++) {
+            if (vviret[i][j] == '-') {
+                vires[i][j] = 0;
+            } else {
+                vires[i][j] = vviret[i][j] - 'A';
+            }
+        }
+    }
+
+    return vires;
 }

@@ -18,7 +18,8 @@
 class battleship {
    private:
     bool initiated = false;
-    const int board_size = 10;
+    int board_size = 10;
+    int ship_id = 1; 
 
     std::vector<point> dir_vec_map = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
@@ -47,13 +48,14 @@ class battleship {
     std::string place_ship_size_one(std::vector<std::string>& board,
                                     bool iseven);
     std::vector<std::string> ship_init();
+    void ship_init_helper(std::vector<std::string>& , 
+        std::vector<std::string>& ); 
 
     // bs_hit_ship.cpp
     point hit_ship_adjacent_bfs(const std::vector<std::string>& board,
                                 point start);
     point hit_ship_adjacent_advanced(const std::vector<std::string>& board,
                                      point start);
-    point hit_ship_adjacent_random(const std::vector<std::string>& board);
     point hit_ship_fully_random(const std::vector<std::string>& board);
 
     // bs_hit_ship.1.cpp
@@ -66,6 +68,10 @@ class battleship {
 
    public:
     int process(std::string str);
+    std::vector<std::vector<int>> ship_init_str(); 
+    void set_board_size(int bs){ board_size = bs; }
+    int get_board_size() { return board_size; }
+    point hit_ship_adjacent_random(const std::vector<std::string>& board);
 };
 
 #endif
